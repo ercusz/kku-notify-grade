@@ -5,7 +5,7 @@
         "course_code": "SC310006",
         "course_name": "Mobile and Web Application Development",
         "sec": 1,
-        "status": "รออาจารย์ส่งเกรด"
+        "status": ""
     },
     {
         "acadyear": 2564,
@@ -13,7 +13,7 @@
         "course_code": "SC313005",
         "course_name": "THEORY OF COMPUTATION",
         "sec": 1,
-        "status": "รออาจารย์ส่งเกรด"
+        "status": ""
     },
     {
         "acadyear": 2564,
@@ -21,6 +21,6 @@
         "course_code": "SC313006",
         "course_name": "ARTIFICIAL INTELLIGENCE",
         "sec": 1,
-        "status": "รออาจารย์ส่งเกรด"
+        "status": ""
     }
 ]

@@ -119,7 +119,7 @@ async def list(ctx):
         embed.set_author(name="ผู้ประกาศเกรด", url="https://kku.world/grade-notify-invite", icon_url=bot.user.avatar_url)
         embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/816632544623067166/982530028845793320/Monogram_Logo-01.png")
         for course in courses:
-            embed.add_field(name=f"{course['course_name']}\n(Section {course['sec']})", value=f"{emoji_status[course['status']]} {course['status']}", inline=True)
+            embed.add_field(name=f"{course['course_name']}\n(Section {course['sec']})", value=f"{emoji_status[course['status']]} {course['status']}\n", inline=True)
         embed.timestamp = datetime.utcnow()
         embed.set_footer(text="ข้อมูลสถานะเกรดล่าสุดจาก reg.kku.ac.th")
       
@@ -137,7 +137,7 @@ async def notify():
             print(f"{new_data[5]}, {course['status']}")
             if new_data[5] == 'ส่งเกรดสมบูรณ์':
                 courses.remove(course)
-                desc = 'หายใจเข้าลึก ๆ แล้วเปิด reg ดูเลย'
+                desc = 'หายใจเข้าลึก ๆ แล้วเปิด reg ดูเลย 🎉'
             else:
                 course['status'] = new_data[5]
                 desc = 'รอนาน ๆ ก็อาจจะบั่นทอนหัวใจ~'
@@ -145,11 +145,11 @@ async def notify():
             for guild in bot.guilds:
                 for channel in guild.text_channels:
                     if channel.name == 'grade-notify':
-                        embed = discord.Embed(title="แจ้งเตือนเกรด 🎉", description=desc, color=0xa73b24)
+                        embed = discord.Embed(title="📢 แจ้งเตือนเกรด", description=desc, color=0xa73b24)
                         embed.set_author(name="ผู้ประกาศเกรด", url="https://kku.world/grade-notify-invite", icon_url=bot.user.avatar_url)
                         embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/816632544623067166/982530028845793320/Monogram_Logo-01.png")
                         embed.set_image(url="https://memegenerator.net/img/instances/41287629/-.jpg")
-                        embed.add_field(name=f"{new_data[3]}(Section {new_data[4]})", value=f"{emoji_status[new_data[5]]} {new_data[5]}", inline=True)
+                        embed.add_field(name=f"{new_data[3]}\n(Section {new_data[4]}, {new_data[1]}/{new_data[0]})", value=f"{emoji_status[new_data[5]]} {new_data[5]}\n", inline=True)
                         embed.timestamp = datetime.utcnow()
                         embed.set_footer(text="ข้อมูลสถานะเกรดล่าสุดจาก reg.kku.ac.th")
       
