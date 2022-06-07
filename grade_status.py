@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-def getStatus(acadyear: int, semester: int, course_code: str, sec: int):
+def getCourseData(acadyear: int, semester: int, course_code: str, sec: int):
     url = f'https://reg-mirror.kku.ac.th/registrar/class_info_status.asp?acadyear={acadyear}&semester={semester}&coursecode={course_code}'
     req = requests.get(url)
     soup = BeautifulSoup(req.content, 'html.parser')
