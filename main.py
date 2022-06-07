@@ -11,6 +11,7 @@ intents = discord.Intents.default()
 intents.members = True
 
 bot = commands.Bot('gn!', intents=intents)
+bot.remove_command('help')
 
 EMOJI_STATUS = {
     'ยังไม่มีนักศึกษาลงทะเบียน': '🔵',
@@ -59,7 +60,7 @@ async def helps(ctx):
     """Returns list of commands"""
     await ctx.message.delete()
     desc = """
-`gn!help` — แสดงคำสั่งทั้งหมด
+`gn!helps` — แสดงคำสั่งทั้งหมด
 
 `gn!uptime` — แสดง uptime ของบอท
 
@@ -103,18 +104,16 @@ async def uptime(ctx):
     await ctx.send(f'⌛ Uptime: {hours} ชั่วโมง, {minutes} นาที, {seconds} วินาที')
 
 
-@bot.listen()
-async def on_message(message):
-    """on_message Action"""
-    print('Message from {0.author}: {0.content}'.format(message))
-
-
 @bot.event
 async def on_guild_join(guild):
-    await bot.db.execute('''
-        INSERT INTO guilds(id) VALUES($1)
-    ''', guild.id)
-    print(f'Add guild "{guild.name}" with id={guild.id} into database')
+    try:
+        await bot.db.execute('''
+            INSERT INTO guilds(id) VALUES($1)
+        ''', guild.id)
+        print(f'Add guild "{guild.name}" with id={guild.id} into database')
+    except Exception as e:
+        print(e)
+
     await fetch_course_channels()
 
 
