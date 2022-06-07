@@ -73,7 +73,7 @@ async def helps(ctx):
 `gn!remove <id>` — ลบรายวิชาออกจากรายการ
     """
     embed = discord.Embed(title="🚀 คำสั่งทั้งหมด", description=desc, color=0x75e8ff)
-    embed.set_footer(text="ขอให้สนุกกับการใช้งาน หากพบปัญหาการใช้งานโปรดติดต่อ `Custard#2161`")
+    embed.set_footer(text="ขอให้สนุกกับการใช้งาน หากพบปัญหาในการใช้งานโปรดติดต่อ Custard#2161")
     await ctx.send(embed=embed)
 
 
