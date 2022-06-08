@@ -278,38 +278,43 @@ async def list(ctx):
 
 @tasks.loop(seconds=60)
 async def notify():
-    for course in bot.course_channels:
-        # data scraping to get new course data
-        new_data = getCourseData(course['acadyear'], course['semester'], course['course_code'], course['sec'])
-        # check for new course status
-        if new_data[5] != course['status']:
-            # check course status is graded or not
-            if new_data[5] == 'ส่งเกรดสมบูรณ์':
-                # delete course from database
-                await bot.db.execute('''
-                    DELETE FROM courses
-                    WHERE id=$1;
-                ''', course['id'])
-                desc = 'หายใจเข้าลึก ๆ แล้วเปิด reg ดูเลย 🎉'
-            else:
-                # update course status to database
-                await bot.db.execute('''
-                    UPDATE courses SET status=$1 WHERE id=$2;
-                ''', new_data[5], course['id'])
-                desc = 'รอนาน ๆ ก็อาจจะบั่นทอนหัวใจ~'
+    try:
+        for course in bot.course_channels:
+            # data scraping to get new course data
+            new_data = getCourseData(course['acadyear'], course['semester'], course['course_code'], course['sec'])
+            # check new_data have status field
+            if 5 < len(new_data):
+                # check for new course status
+                if new_data[5] != course['status']:
+                    # check course status is graded or not
+                    if new_data[5] == 'ส่งเกรดสมบูรณ์':
+                        # delete course from database
+                        await bot.db.execute('''
+                            DELETE FROM courses
+                            WHERE id=$1;
+                        ''', course['id'])
+                        desc = 'หายใจเข้าลึก ๆ แล้วเปิด reg ดูเลย 🎉'
+                    else:
+                        # update course status to database
+                        await bot.db.execute('''
+                            UPDATE courses SET status=$1 WHERE id=$2;
+                        ''', new_data[5], course['id'])
+                        desc = 'รอนาน ๆ ก็อาจจะบั่นทอนหัวใจ~'
 
-            # loop channels in this course
-            for ch in course['channels']:
-                channel = bot.get_channel(ch) # get channel from bot by id
-                # create embed template 
-                embed = embed_template("📢 แจ้งเตือนเกรด", desc)
-                embed.add_field(name=f"{new_data[3]}\n(Section {int(new_data[4])}, {int(new_data[1])}/{int(new_data[0])})", value=f"{EMOJI_STATUS[new_data[5]]} {new_data[5]}\n", inline=True)
-                embed.set_image(url="https://memegenerator.net/img/instances/41287629/-.jpg")
+                    # loop channels in this course
+                    for ch in course['channels']:
+                        channel = bot.get_channel(ch) # get channel from bot by id
+                        # create embed template 
+                        embed = embed_template("📢 แจ้งเตือนเกรด", desc)
+                        embed.add_field(name=f"{new_data[3]}\n(Section {int(new_data[4])}, {int(new_data[1])}/{int(new_data[0])})", value=f"{EMOJI_STATUS[new_data[5]]} {new_data[5]}\n", inline=True)
+                        embed.set_image(url="https://memegenerator.net/img/instances/41287629/-.jpg")
 
-                await channel.send(embed=embed)
+                        await channel.send(embed=embed)
 
-            # fetch data to update variables bot.course_channels
-            await fetch_course_channels()
+                    # fetch data to update variables bot.course_channels
+                    await fetch_course_channels()
+    except Exception as e:
+        print(e)
 
 
 def embed_template(title=None, desc=None):
