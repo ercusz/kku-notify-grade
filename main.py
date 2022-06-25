@@ -48,7 +48,8 @@ async def on_ready():
     bot.startdate = datetime.now()
     await fetch_course_channels()
     # init tasks
-    notify.start()
+    if not notify.is_running():
+        notify.start() 
 
     # set bot presence
     await bot.change_presence(activity=discord.Streaming(
