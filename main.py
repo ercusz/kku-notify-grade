@@ -8,7 +8,9 @@ from discord.ext import commands, tasks
 from grade_status import getCourseData
 
 intents = discord.Intents.default()
+intents.reactions = True
 intents.members = True
+intents.guilds = True
 
 bot = commands.Bot('gn!', intents=intents)
 bot.remove_command('help')
@@ -305,12 +307,13 @@ async def notify():
                     # loop channels in this course
                     for ch in course['channels']:
                         channel = bot.get_channel(ch) # get channel from bot by id
-                        # create embed template 
-                        embed = embed_template("📢 แจ้งเตือนเกรด", desc)
-                        embed.add_field(name=f"{new_data[3]}\n(Section {int(new_data[4])}, {int(new_data[1])}/{int(new_data[0])})", value=f"{EMOJI_STATUS[new_data[5]]} {new_data[5]}\n", inline=True)
-                        embed.set_image(url="https://memegenerator.net/img/instances/41287629/-.jpg")
+                        if channel is not None:
+                            # create embed template 
+                            embed = embed_template("📢 แจ้งเตือนเกรด", desc)
+                            embed.add_field(name=f"{new_data[3]}\n(Section {int(new_data[4])}, {int(new_data[1])}/{int(new_data[0])})", value=f"{EMOJI_STATUS[new_data[5]]} {new_data[5]}\n", inline=True)
+                            embed.set_image(url="https://memegenerator.net/img/instances/41287629/-.jpg")
 
-                        await channel.send(embed=embed)
+                            await channel.send(embed=embed)
 
                     # fetch data to update variables bot.course_channels
                     await fetch_course_channels()
