@@ -328,12 +328,11 @@ async def notify():
 
 def embed_template(title=None, desc=None, color=0xa73b24, 
             name="ผู้ประกาศเกรด", author_url="https://kku.world/grade-notify-invite", 
-            icon_url=bot.user.avatar_url, 
             thumbnail_url="https://cdn.discordapp.com/attachments/816632544623067166/982530028845793320/Monogram_Logo-01.png",
             footer_text="ข้อมูลสถานะเกรดล่าสุดจาก reg.kku.ac.th"
         ):
     embed = discord.Embed(title=title, description=desc, color=color)
-    embed.set_author(name=name, url=author_url, icon_url=icon_url)
+    embed.set_author(name=name, url=author_url, icon_url=bot.user.avatar_url)
     embed.set_thumbnail(url=thumbnail_url)
     embed.timestamp = datetime.utcnow()
     embed.set_footer(text=footer_text)
