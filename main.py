@@ -75,8 +75,9 @@ async def helps(ctx):
 
 `gn!remove <id>` — ลบรายวิชาออกจากรายการ
     """
-    embed = discord.Embed(title="🚀 คำสั่งทั้งหมด", description=desc, color=0x75e8ff)
-    embed.set_footer(text="ขอให้สนุกกับการใช้งาน หากพบปัญหาในการใช้งานโปรดติดต่อ Custard#2161")
+    title = "🚀 คำสั่งทั้งหมด"
+    footer ="ขอให้สนุกกับการใช้งาน หากพบปัญหาในการใช้งานโปรดติดต่อ Custard#2161"
+    embed = embed_template(title=title, desc=desc, color=0x75e8ff, footer_text=footer)
     await ctx.send(embed=embed)
 
 
@@ -264,7 +265,7 @@ async def list(ctx):
         ''', ctx.guild.id)
     ]
     if len(courses) > 0:
-        embed = embed_template("📃 รายวิชาทั้งหมด", """
+        embed = embed_template(title="📃 รายวิชาทั้งหมด", desc="""
 สามารถ**เพิ่ม**รายวิชาได้โดยใช้คำสั่ง
 `gn!add <ปีการศึกษา> <เทอม> <รหัสวิชา(ไม่มีช่องว่าง)> <กลุ่มการเรียน>`
 
@@ -297,21 +298,25 @@ async def notify():
                             WHERE id=$1;
                         ''', course['id'])
                         desc = 'หายใจเข้าลึก ๆ แล้วเปิด reg ดูเลย 🎉'
+                        img = 'https://memegenerator.net/img/instances/41287629/-.jpg'
+                        color = 0x70A750
                     else:
                         # update course status to database
                         await bot.db.execute('''
                             UPDATE courses SET status=$1 WHERE id=$2;
                         ''', new_data[5], course['id'])
                         desc = 'รอนาน ๆ ก็อาจจะบั่นทอนหัวใจ~'
+                        img = 'https://cdn.discordapp.com/attachments/982341306292502558/991936059380350996/w8.jpg'
+                        color = 0xF0C154
 
                     # loop channels in this course
                     for ch in course['channels']:
                         channel = bot.get_channel(ch) # get channel from bot by id
                         if channel is not None:
                             # create embed template 
-                            embed = embed_template("📢 แจ้งเตือนเกรด", desc)
+                            embed = embed_template(title="📢 แจ้งเตือนเกรด", desc=desc, color=color)
                             embed.add_field(name=f"{new_data[3]}\n(Section {int(new_data[4])}, {int(new_data[1])}/{int(new_data[0])})", value=f"{EMOJI_STATUS[new_data[5]]} {new_data[5]}\n", inline=True)
-                            embed.set_image(url="https://memegenerator.net/img/instances/41287629/-.jpg")
+                            embed.set_image(url=img)
 
                             await channel.send(embed=embed)
 
@@ -321,12 +326,17 @@ async def notify():
         print(e)
 
 
-def embed_template(title=None, desc=None):
-    embed = discord.Embed(title=title, description=desc, color=0xa73b24)
-    embed.set_author(name="ผู้ประกาศเกรด", url="https://kku.world/grade-notify-invite", icon_url=bot.user.avatar_url)
-    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/816632544623067166/982530028845793320/Monogram_Logo-01.png")
+def embed_template(title=None, desc=None, color=0xa73b24, 
+            name="ผู้ประกาศเกรด", author_url="https://kku.world/grade-notify-invite", 
+            icon_url=bot.user.avatar_url, 
+            thumbnail_url="https://cdn.discordapp.com/attachments/816632544623067166/982530028845793320/Monogram_Logo-01.png",
+            footer_text="ข้อมูลสถานะเกรดล่าสุดจาก reg.kku.ac.th"
+        ):
+    embed = discord.Embed(title=title, description=desc, color=color)
+    embed.set_author(name=name, url=author_url, icon_url=icon_url)
+    embed.set_thumbnail(url=thumbnail_url)
     embed.timestamp = datetime.utcnow()
-    embed.set_footer(text="ข้อมูลสถานะเกรดล่าสุดจาก reg.kku.ac.th")
+    embed.set_footer(text=footer_text)
 
     return embed
 
