@@ -5,7 +5,7 @@ from requests.packages.urllib3.util.retry import Retry
 
 def getCourseData(acadyear: int, semester: int, course_code: str, sec: int):
     
-    url = f'https://reg-mirror.kku.ac.th/registrar/class_info_status.asp?acadyear={acadyear}&semester={semester}&coursecode={course_code}'
+    url = f'https://reg.kku.ac.th/registrar/class_info_status.asp?acadyear={acadyear}&semester={semester}&coursecode={course_code}'
     
     session = requests.Session()
     retry = Retry(connect=3, backoff_factor=0.5)
